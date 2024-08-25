@@ -1,15 +1,24 @@
 import {Link} from "react-router-dom";
 import {useEffect, useState} from "react";
-import * as BookAPI from "../BookAPI";
+import {search,update} from "../BookAPI";
+import BookController from "../Controller/BookController";
 
 const SearchPage = () => {
     const [query, setQuery] = useState('');
     const [results, setResults] = useState([]);
 
     useEffect(() => {
-        BookAPI.search(query, 12).then((searchResults) => setResults(searchResults))
-    }, []);
-    
+        if (query !== '') {
+            search(query)
+                .then(data => setResults(data));
+        }
+    }, [query]);
+    let validData = (Array.isArray(results) && results.indexOf(results.error) === -1);
+    const handleShelfChange = async (book, shelf) => {
+        await update(book, shelf).then(
+            data => alert('Updated')
+        )
+    };
     return (
         <div className="search-books">
             <div className="search-books-bar">
@@ -23,9 +32,17 @@ const SearchPage = () => {
                 </div>
             </div>
             <div className="search-books-results">
+                <div className="list-books-content">
                 <ol className="books-grid">
-
-                </ol>
+                    {
+                        validData ?
+                            <BookController
+                                books={results}
+                                onShelfChange ={handleShelfChange}
+                            />
+                            : <p>Results will show here</p>
+                    }
+                </ol></div>
             </div>
         </div>
     )

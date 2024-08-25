@@ -1,11 +1,11 @@
-import * as BookAPI from "../BookAPI";
+import {getAll, update} from "../BookAPI";
 import {useEffect, useState} from "react";
 import BookController from "./BookController";
 
 const BookShelvesController = () => {
     const [books, setBooks] = useState([]);
     useEffect(() => {
-        BookAPI.getAll().then((result) => setBooks(result));
+        getAll().then((result) => setBooks(result));
     }, []);
     let shelfTitleMapping = [
             {
@@ -22,7 +22,11 @@ const BookShelvesController = () => {
             }
         ]
     ;
-
+    const handleShelfChange = async (book, shelf) => {
+        await update(book, shelf);
+        const allBooks = await getAll();
+        setBooks(allBooks);
+    };
     return (
         shelfTitleMapping.map((shelfTitle) => {
             return (
@@ -33,6 +37,7 @@ const BookShelvesController = () => {
                             <BookController
                                 type={shelfTitle.value}
                                 books={books.filter(book => book.shelf === shelfTitle.key)}
+                                onShelfChange ={handleShelfChange}
                             />
                         </ol>
                     </div>

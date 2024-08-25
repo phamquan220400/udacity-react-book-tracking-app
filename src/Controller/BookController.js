@@ -2,6 +2,7 @@ const BookController = (props) => {
     let books = props.books;
     return (
         books.map((book) => {
+            let author = book.authors;
             return (
                 <li key={book.id}>
                     <div className="book">
@@ -16,7 +17,7 @@ const BookController = (props) => {
                                 src={book.imageLinks.smallThumbnail}
                             />
                             <div className="book-shelf-changer">
-                                <select>
+                                <select onClick={e => props.onShelfChange(book, e.target.value)}>
                                     <option value="none" disabled>
                                         Move to...
                                     </option>
@@ -29,8 +30,8 @@ const BookController = (props) => {
                                 </select>
                             </div>
                         </div>
-                        <div className="book-title">To Kill a Mockingbird</div>
-                        <div className="book-authors">Harper Lee</div>
+                        <div className="book-title">{book.title}</div>
+                        <div className="book-authors">{author}</div>
                     </div>
                 </li>
             );

@@ -1,10 +1,13 @@
-├── CONTRIBUTING.md
+├── CONTRIBUTING.md 
+
 ├── README.md - This file.
+
 ├── SEARCH_TERMS.md # The whitelisted short collection of available search terms for you to use with your app.
+
 ├── package.json # npm package manager file. It's unlikely that you'll need to modify this.
 ├── public
-│   ├── favicon.ico # React Icon, You may change if you wish.
-│   └── index.html # DO NOT MODIFY
+├── favicon.ico # React Icon, You may change if you wish.
+└── index.html # DO NOT MODIFY
 └── src
 ├── App.css # Styles for your app. Feel free to customize this as you desire.
 ├── App.js # This is the root of your app. Contains static HTML right now.
