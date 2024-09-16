@@ -11,12 +11,12 @@ const SearchPage = () => {
             search(query).then(resultData => {
                     if(!resultData.error){
                         getAll().then(allData => {
-                            const newData = resultData.map((dataItem) => {
+                            const result = resultData.map((dataItem) => {
                                 const book = allData.find(item => item.id === dataItem.id);
                                 let bookShelf = book ? book.shelf : 'none';
                                 return {...dataItem, shelf:bookShelf};
                             });
-                            setResults([...newData]);
+                            setResults([...result]);
                         });
                     } else {
                         setResults([]);
