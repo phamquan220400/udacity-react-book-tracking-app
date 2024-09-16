@@ -1,24 +1,31 @@
 import {Link} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {search,update} from "../BookAPI";
+import {search, getAll} from "../BookAPI";
 import BookController from "../Controller/BookController";
 
 const SearchPage = () => {
-    const [query, setQuery] = useState('');
-    const [results, setResults] = useState([]);
-
+    const [query, setQuery] = useState(null);
+    const [results, setResults] = useState(null);
     useEffect(() => {
-        if (query !== '') {
-            search(query)
-                .then(data => setResults(data));
+        if (query && query.length > 0) {
+            search(query).then(resultData => {
+                    if(!resultData.error){
+                        getAll().then(allData => {
+                            const newData = resultData.map((dataItem) => {
+                                const book = allData.find(item => item.id === dataItem.id);
+                                let bookShelf = book ? book.shelf : 'none';
+                                return {...dataItem, shelf:bookShelf};
+                            });
+                            setResults([...newData]);
+                        });
+                    } else {
+                        setResults([]);
+                    }
+                })
+        } else {
+            setResults([]);
         }
     }, [query]);
-    let validData = (Array.isArray(results) && results.indexOf(results.error) === -1);
-    const handleShelfChange = async (book, shelf) => {
-        await update(book, shelf).then(
-            data => alert('Updated')
-        )
-    };
     return (
         <div className="search-books">
             <div className="search-books-bar">
@@ -35,10 +42,9 @@ const SearchPage = () => {
                 <div className="list-books-content">
                 <ol className="books-grid">
                     {
-                        validData ?
+                        (results && (results.length > 0)) ?
                             <BookController
                                 books={results}
-                                onShelfChange ={handleShelfChange}
                             />
                             : <p>Results will show here</p>
                     }

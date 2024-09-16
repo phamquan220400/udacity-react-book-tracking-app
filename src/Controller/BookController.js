@@ -1,8 +1,18 @@
+import * as API from '../BookAPI';
+import {useNavigation} from "react-router";
+
 const BookController = (props) => {
     let books = props.books;
+    const onShelfChange = (book, shelf) => {
+        API.update(book, shelf).then(res =>{
+            if(props.onShelfChange){
+                props.onShelfChange();
+            }
+        });
+    }
     return (
         books.map((book) => {
-            let author = book.authors;
+            let author = book?.authors?.join(', ');
             return (
                 <li key={book.id}>
                     <div className="book">
@@ -14,10 +24,10 @@ const BookController = (props) => {
                                     width: 128,
                                     height: 193,
                                 }}
-                                src={book.imageLinks.smallThumbnail}
+                                src={book?.imageLinks?.smallThumbnail}
                             />
                             <div className="book-shelf-changer">
-                                <select onClick={e => props.onShelfChange(book, e.target.value)}>
+                                <select onChange={e => onShelfChange(book, e.target.value)} value={book?.shelf}>
                                     <option value="none" disabled>
                                         Move to...
                                     </option>
